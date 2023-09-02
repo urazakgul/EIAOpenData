@@ -1,0 +1,4 @@
+dist/
+EIAOpenData.egg-info/
+MANIFEST.in
+venv/
