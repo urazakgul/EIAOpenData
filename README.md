@@ -1,4 +1,4 @@
-# EIAOpenData v0.1.0
+# EIAOpenData v0.1.1
 
 ## Description
 
@@ -41,7 +41,7 @@ pip install EIAOpenData
 If you want to install a specific version, you can run the command as in the example below.
 
 ```bash
-pip install EIAOpenData==0.1.0
+pip install EIAOpenData==0.1.1
 ```
 
 You can find the version of the installed package with the following command.
@@ -68,15 +68,17 @@ This class is designed for retrieving data from the EIA (Energy Information Admi
 * Parameters:
   * `api_key` (str): Your EIA API key. It is required to make API requests.
 
-`get_data(route, data_param, frequency=None, start_date=None, end_date=None)`
+`get_data(route, data_param, frequency=None, start_date=None, end_date=None, facet_name=None, facet_values=None)`
 
 * Description: Fetches data from the API.
 * Parameters:
-  * `route` (str): The target route for the API request.
-  * `data_param` (str): The data parameter to include in the URL.
+  * `route` (str): The target route for the API request (e.g., "petroleum/crd/crpdn").
+  * `data_param` (str): The data parameter to include in the URL (e.g., "value").
   * `frequency` (str, optional): The frequency parameter to include in the URL (e.g., "monthly").
   * `start_date` (str, optional): The start date in a valid date format (e.g., "2005-03").
   * `end_date` (str, optional): The end date in a valid date format (e.g., "2022-11").
+  * `facet_name` (str, optional): The facet name to filter the data (e.g., "product").
+  * `facet_values` (list, optional): The facet values to filter the data (e.g., ["EPC0"]).
 * Returns: DataFrame.
 
 `filter_and_select_columns(df, filter_columns=None, filter_values=None, selected_columns=None)`
@@ -120,6 +122,8 @@ eia = EIAOpenData(my_api_key) # Initialize EIAOpenData with your API key.
 # - 'frequency' to set the desired data frequency (e.g., 'weekly', 'monthly', 'annual').
 # - 'start_date' to specify the beginning date for the data you want to retrieve.
 # - 'end_date' to specify the end date for the data you want to retrieve.
+# - 'facet_name' to define the facet by which you want to filter the data.
+# - 'facet_values' to specify the values within the chosen facet by which to filter the data.
 
 # Define the API route for fetching data related to weekly petroleum imports and exports.
 # Adjust this value according to the dataset path from the URL.
@@ -130,13 +134,24 @@ route = 'petroleum/move/wkly'
 # Adjust this value based on the 'data' parameter from the URL.
 data_param = 'value'
 
+# Specify the data retrieval parameters.
+frequency='four-week-average' # Data frequency.
+start_date='2018-01-01' # Start date for data retrieval.
+end_date='2023-08-25' # End date for data retrieval.
+
+# Specify the facet parameters for data filtering.
+facet_name = 'product' # Name of the facet to filter by.
+facet_values = ['EPC0','EPJK'] # Values to filter within the facet.
+
 # Fetch data from the EIA API
 my_data = eia.get_data(
   route,
   data_param,
-  frequency='four-week-average',
-  start_date='2018-01-01',
-  end_date='2023-08-25'
+  frequency=frequency,
+  start_date=start_date,
+  end_date=end_date,
+  facet_name=facet_name,
+  facet_values=facet_values
 )
 
 # Save the retrieved data to an Excel file named 'my_data'
@@ -166,6 +181,10 @@ eia.save_to_excel(my_new_data, 'my_new_data')
 ### v0.1.0 - 02/09/2023
 
 * First version released.
+
+### v0.1.1 - 12/09/2023
+
+* Added the ability to customize data retrieval by specifying `facet_name` and `facet_values` parameters for more precise filtering of dataset facets.
 
 ## License
 
